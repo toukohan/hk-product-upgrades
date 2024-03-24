@@ -1,0 +1,20 @@
+.toplevel_page_hk-product-upgrades #wpcontent {
+  background: #fff;
+}
+
+.product-upgrade-app .upgrade-controls {
+  display: flex;
+  gap: 2rem;
+}
+
+.hkpu-upgrade-input {
+  display: flex;
+  align-items: center; /* Vertically aligns the contents */
+  justify-content: space-between; /* Optional: Horizontally spaces out the contents */
+  margin-bottom: 10px; /* Optional: Adds some space between the input and the next element */
+}
+
+.hkpu-upgrade-input__checkbox {
+  margin-right: 10px; /* Optional: Adds some space between the checkbox and the label */
+}
+
