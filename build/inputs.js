@@ -30,10 +30,9 @@ function UpgradeInputs() {
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const productId = window.location.search.split("&")[0].split("=")[1];
     fetch(`/wp-json/hkpu/v1/product-upgrade-data/${productId}`).then(response => response.json()).then(data => {
-      console.log(data);
       setUpgrades(data.upgrades);
       setCategories(data.categories);
-      setSelectedUpgrades(data.selectedUpgrades);
+      setSelectedUpgrades(data.selected_upgrades);
       setSelectionsResolved(true);
     });
   }, []);
@@ -45,41 +44,61 @@ function UpgradeInputs() {
       setSelectedUpgrades([...selectedUpgrades, upgradeId]);
     }
   };
-  const renderCheckbox = upgrade => {
-    const isChecked = selectedUpgrades?.includes(upgrade.id.toString());
-    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      key: upgrade.id,
-      className: "hkpu-upgrade-input"
-    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
-      className: "hkpu-upgrade-input__label",
-      htmlFor: `hkpu_upgrades_${upgrade.id}`
-    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-      className: "hkpu-upgrade-input__checkbox",
-      type: "checkbox",
-      id: `hkpu_upgrades_${upgrade.id}`,
-      name: "hkpu_upgrades[]",
-      value: upgrade.id,
-      checked: isChecked,
-      onChange: handleChange
-    }), upgrade.title, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "hkpu-upgrade-input__title"
-    })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "hkpu-upgrade-input__price"
-    }, upgrade.price, "\u20AC"));
-  };
-  const renderCategory = category => {
-    const categoryUpgrades = upgrades.filter(upgrade => Number(upgrade.category) === category.id);
-    if (categoryUpgrades.length === 0) {
-      return null;
-    }
-    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      key: category.id
-    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, category.name), categoryUpgrades.map(renderCheckbox));
-  };
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "upgrade-inputs"
-  }, selectionsResolved ? (_categories$map = categories?.map(renderCategory)) !== null && _categories$map !== void 0 ? _categories$map : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, null) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, null));
+  }, selectionsResolved ? (_categories$map = categories?.map(category => category && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(UpgradeCategory, {
+    key: category.id,
+    category: category,
+    upgrades: upgrades,
+    selectedUpgrades: selectedUpgrades,
+    handleChange: handleChange
+  }))) !== null && _categories$map !== void 0 ? _categories$map : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, null) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, null));
 }
+const UpgradeCategory = ({
+  category,
+  upgrades,
+  selectedUpgrades,
+  handleChange
+}) => {
+  const categoryUpgrades = upgrades.filter(upgrade => Number(upgrade.category) === category.id);
+  if (categoryUpgrades.length === 0) {
+    return null;
+  }
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    key: category.id
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, category.name), categoryUpgrades.map(upgrade => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(UpgradeCheckbox, {
+    key: upgrade.id,
+    upgrade: upgrade,
+    selectedUpgrades: selectedUpgrades,
+    handleChange: handleChange
+  })));
+};
+const UpgradeCheckbox = ({
+  upgrade,
+  selectedUpgrades,
+  handleChange
+}) => {
+  const isChecked = selectedUpgrades?.includes(upgrade.id.toString());
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    key: upgrade.id,
+    className: "hkpu-upgrade-input"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    className: "hkpu-upgrade-input__label",
+    htmlFor: `hkpu_upgrades_${upgrade.id}`
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    className: "hkpu-upgrade-input__checkbox",
+    type: "checkbox",
+    id: `hkpu_upgrades_${upgrade.id}`,
+    name: "hkpu_upgrades[]",
+    value: upgrade.id,
+    checked: isChecked,
+    onChange: handleChange
+  }), upgrade.title, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "hkpu-upgrade-input__title"
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "hkpu-upgrade-input__price"
+  }, upgrade.price, "\u20AC"));
+};
 
 /***/ }),
 
