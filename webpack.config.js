@@ -4,7 +4,8 @@ const path = require("path");
 module.exports = {
   ...defaultConfig,
   entry: {
-    index: path.resolve(process.cwd(), "src", "index.js"),
+    ...defaultConfig.entry,
+    main: path.resolve(process.cwd(), "src", "main.js"),
     inputs: path.resolve(process.cwd(), "src", "inputs.js"),
   },
 };
