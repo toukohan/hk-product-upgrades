@@ -14,7 +14,6 @@ export default function UpgradeInputs() {
     fetch(`/wp-json/hkpu/v1/product-upgrade-data/${productId}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setUpgrades(data.upgrades);
         setCategories(data.categories);
         setSelectedUpgrades(data.selected_upgrades);
@@ -30,22 +29,6 @@ export default function UpgradeInputs() {
       setSelectedUpgrades([...selectedUpgrades, upgradeId]);
     }
   };
-
-  // const renderCategory = (category) => {
-  //   const categoryUpgrades = upgrades.filter(
-  //     (upgrade) => Number(upgrade.category) === category.id
-  //   );
-
-  //   if (categoryUpgrades.length === 0) {
-  //     return null;
-  //   }
-  //   return (
-  //     <div key={category.id}>
-  //       <h4>{category.name}</h4>
-  //       {categoryUpgrades.map(renderCheckbox)}
-  //     </div>
-  //   );
-  // };
 
   return (
     <div className="upgrade-inputs">
@@ -74,7 +57,6 @@ const UpgradeCategory = ({
   selectedUpgrades,
   handleChange,
 }) => {
-  console.log("upgrade category selections: ", selectedUpgrades);
   const categoryUpgrades = upgrades.filter(
     (upgrade) => Number(upgrade.category) === category.id
   );
@@ -99,8 +81,6 @@ const UpgradeCategory = ({
 };
 
 const UpgradeCheckbox = ({ upgrade, selectedUpgrades, handleChange }) => {
-  console.log("Checkbox upgrade id: ", upgrade.id);
-  console.log("Checkbox selectedUpgrades: ", selectedUpgrades);
   const isChecked = selectedUpgrades?.includes(upgrade.id.toString());
   return (
     <div key={upgrade.id} className="hkpu-upgrade-input">
