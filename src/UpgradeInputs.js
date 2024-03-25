@@ -17,7 +17,7 @@ export default function UpgradeInputs() {
         console.log(data);
         setUpgrades(data.upgrades);
         setCategories(data.categories);
-        setSelectedUpgrades(data.selectedUpgrades);
+        setSelectedUpgrades(data.selected_upgrades);
         setSelectionsResolved(true);
       });
   }, []);
@@ -31,55 +31,97 @@ export default function UpgradeInputs() {
     }
   };
 
-  const renderCheckbox = (upgrade) => {
-    const isChecked = selectedUpgrades?.includes(upgrade.id.toString());
-    return (
-      <div key={upgrade.id} className="hkpu-upgrade-input">
-        <label
-          className="hkpu-upgrade-input__label"
-          htmlFor={`hkpu_upgrades_${upgrade.id}`}
-        >
-          <input
-            className="hkpu-upgrade-input__checkbox"
-            type="checkbox"
-            id={`hkpu_upgrades_${upgrade.id}`}
-            name="hkpu_upgrades[]"
-            value={upgrade.id}
-            checked={isChecked}
-            onChange={handleChange}
-          />
+  // const renderCategory = (category) => {
+  //   const categoryUpgrades = upgrades.filter(
+  //     (upgrade) => Number(upgrade.category) === category.id
+  //   );
 
-          {upgrade.title}
-          <span className="hkpu-upgrade-input__title"></span>
-        </label>
-        <span className="hkpu-upgrade-input__price">{upgrade.price}€</span>
-      </div>
-    );
-  };
-
-  const renderCategory = (category) => {
-    const categoryUpgrades = upgrades.filter(
-      (upgrade) => Number(upgrade.category) === category.id
-    );
-
-    if (categoryUpgrades.length === 0) {
-      return null;
-    }
-    return (
-      <div key={category.id}>
-        <h4>{category.name}</h4>
-        {categoryUpgrades.map(renderCheckbox)}
-      </div>
-    );
-  };
+  //   if (categoryUpgrades.length === 0) {
+  //     return null;
+  //   }
+  //   return (
+  //     <div key={category.id}>
+  //       <h4>{category.name}</h4>
+  //       {categoryUpgrades.map(renderCheckbox)}
+  //     </div>
+  //   );
+  // };
 
   return (
     <div className="upgrade-inputs">
       {selectionsResolved ? (
-        categories?.map(renderCategory) ?? <Spinner />
+        categories?.map(
+          (category) =>
+            category && (
+              <UpgradeCategory
+                key={category.id}
+                category={category}
+                upgrades={upgrades}
+                selectedUpgrades={selectedUpgrades}
+                handleChange={handleChange}
+              />
+            )
+        ) ?? <Spinner />
       ) : (
         <Spinner />
       )}
     </div>
   );
 }
+const UpgradeCategory = ({
+  category,
+  upgrades,
+  selectedUpgrades,
+  handleChange,
+}) => {
+  console.log("upgrade category selections: ", selectedUpgrades);
+  const categoryUpgrades = upgrades.filter(
+    (upgrade) => Number(upgrade.category) === category.id
+  );
+
+  if (categoryUpgrades.length === 0) {
+    return null;
+  }
+
+  return (
+    <div key={category.id}>
+      <h4>{category.name}</h4>
+      {categoryUpgrades.map((upgrade) => (
+        <UpgradeCheckbox
+          key={upgrade.id}
+          upgrade={upgrade}
+          selectedUpgrades={selectedUpgrades}
+          handleChange={handleChange}
+        />
+      ))}
+    </div>
+  );
+};
+
+const UpgradeCheckbox = ({ upgrade, selectedUpgrades, handleChange }) => {
+  console.log("Checkbox upgrade id: ", upgrade.id);
+  console.log("Checkbox selectedUpgrades: ", selectedUpgrades);
+  const isChecked = selectedUpgrades?.includes(upgrade.id.toString());
+  return (
+    <div key={upgrade.id} className="hkpu-upgrade-input">
+      <label
+        className="hkpu-upgrade-input__label"
+        htmlFor={`hkpu_upgrades_${upgrade.id}`}
+      >
+        <input
+          className="hkpu-upgrade-input__checkbox"
+          type="checkbox"
+          id={`hkpu_upgrades_${upgrade.id}`}
+          name="hkpu_upgrades[]"
+          value={upgrade.id}
+          checked={isChecked}
+          onChange={handleChange}
+        />
+
+        {upgrade.title}
+        <span className="hkpu-upgrade-input__title"></span>
+      </label>
+      <span className="hkpu-upgrade-input__price">{upgrade.price}€</span>
+    </div>
+  );
+};
