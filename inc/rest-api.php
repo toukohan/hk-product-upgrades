@@ -4,6 +4,7 @@ add_action('rest_api_init', function () {
   register_rest_route('hkpu/v1', '/product/(?P<id>\d+)', array(
     'methods' => 'GET',
     'callback' => 'hkpu_get_product_by_id',
+    'permission_callback' => '__return_true', 
     'args' => array(
       'id' => array(
         'validate_callback' => function($param, $request, $key) {
@@ -16,6 +17,7 @@ add_action('rest_api_init', function () {
   register_rest_route('hkpu/v1', '/product-upgrades/(?P<id>\d+)', array(
     'methods' => 'GET',
     'callback' => 'hkpu_get_product_upgrades',
+    'permission_callback' => '__return_true',
     'args' => array(
       'id' => array(
         'validate_callback' => function($param, $request, $key) {
@@ -27,6 +29,7 @@ add_action('rest_api_init', function () {
   register_rest_route('hkpu/v1', '/product-upgrade-data/(?P<id>\d+)', array(
     'methods' => 'GET',
     'callback' => 'hkpu_get_all_product_upgrade_data',
+    'permission_callback' => '__return_true',
     'args' => array(
       'id' => array(
         'validate_callback' => function($param, $request, $key) {
