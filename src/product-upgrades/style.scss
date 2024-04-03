@@ -5,8 +5,8 @@
  * Replace them with your own styles or remove the file completely.
  */
 
-.wp-block-hkpu-product-upgrades {
-	background-color: #21759b;
-	color: #fff;
-	padding: 2px;
+.hkpu-product-upgrades__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 20px;
 }
