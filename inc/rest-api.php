@@ -100,6 +100,7 @@ function hkpu_get_all_product_upgrade_data($data) {
       'id' => $term->term_id,
       'name' => $term->name,
       'icon' => get_term_meta($term->term_id, 'hkpu_term_icon', true),
+      'custom_field_reference' => get_term_meta($term->term_id, 'hkpu_custom_field_reference', true),
     );
   }
 

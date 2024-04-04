@@ -30,10 +30,10 @@ function hkpu_add_visible_cart_inputs() {
   if ( ! is_product() || ! hkpu_product_has_upgrades() ) {
     return;
   }
+  global $product;
 
   // Get the product upgrade categories
   $categories = hkpu_get_product_upgrade_categories();
-  
 
   // Wrap the inputs in a div
   ?>
@@ -44,13 +44,21 @@ function hkpu_add_visible_cart_inputs() {
     // Get the upgrades for the current category
     $upgrades = hkpu_get_product_upgrades_by_category( $category );
     $term = get_term( $category, 'upgrade-category' );
+    $term_custom_field_reference = get_term_meta( $category, 'hkpu_custom_field_reference', true );
     $term_name = $term instanceof WP_Term ? $term->name : $category;
+    $default_upgrade = 'Ei päivitystä';
+    if($term_custom_field_reference) {
+      $default_upgrade = get_post_meta( $product->get_id(), $term_custom_field_reference, true );
+      if(is_array($default_upgrade)) {
+        $default_upgrade = $default_upgrade[0];
+      }
+    }
     ?>
     <div class="product__upgrade--category product__upgrade--<?php echo esc_attr(strtolower($term_name)); ?>">
       <h3 class="product__upgrade--title"><?php echo esc_html($term_name); ?></h3>
       <label class="product__upgrade--label" for="product__upgrade--default-<?php echo esc_attr(strtolower($term_name)); ?>">
-        <input id="product__upgrade--default-<?php echo esc_attr(strtolower($term_name)); ?>" type="radio" name="hkpu_product_upgrade_<?php echo esc_attr($category); ?>" value="default" checked>
-        <span class="product__upgrade--name"><?php esc_html_e("Ei päivitystä", 'hk-product-upgrades'); ?></span>
+        <input id="product__upgrade--default-<?php echo esc_attr(strtolower($term_name)); ?>" type="radio" name="hkpu_product_upgrade_<?php echo esc_attr($category); ?>" value="default" data-price=0 checked>
+        <span class="product__upgrade--name"><?php echo esc_html($default_upgrade); ?></span>
         <span class="product__upgrade--price">0€</span>
       </label>
     <?php
@@ -60,7 +68,7 @@ function hkpu_add_visible_cart_inputs() {
       $upgrade_price = get_post_meta( $upgrade, 'hkpu_price', true );
       ?>
         <label class="product__upgrade--label" for="product__upgrade--<?php echo $upgrade; ?>">
-            <input id="product__upgrade--<?php echo $upgrade; ?>" type="radio" name="hkpu_product_upgrade_<?php echo esc_attr($category); ?>" value="<?php echo $upgrade; ?>">
+            <input id="product__upgrade--<?php echo $upgrade; ?>" type="radio" name="hkpu_product_upgrade_<?php echo esc_attr($category); ?>" value="<?php echo $upgrade; ?>" data-price="<?php echo $upgrade_price; ?>">
             <span class="product__upgrade--name"><?php echo $upgrade_title; ?></span>
             <span class="product__upgrade--price">+<?php echo $upgrade_price; ?>€</span>
           </label>

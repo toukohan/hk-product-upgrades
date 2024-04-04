@@ -8,7 +8,7 @@
     "format": "wp-scripts format",
     "lint:js": "wp-scripts lint-js",
     "packages-update": "wp-scripts packages-update",
-    "start": "wp-scripts start src/main.js src/inputs.js"
+    "start": "wp-scripts start src/main.js src/inputs.js src/frontend.js"
   },
   "author": "",
   "license": "ISC",
