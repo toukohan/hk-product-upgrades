@@ -4,10 +4,9 @@ var __webpack_exports__ = {};
   !*** ./src/frontend.js ***!
   \*************************/
 const inputs = document.querySelectorAll('input[name^="hkpu_product_upgrade_"]');
-let checkedInputs = document.querySelectorAll('input[name^="hkpu_product_upgrade_"]:checked');
-const initialPrice = document.querySelector(".woocommerce-Price-amount bdi");
-const basePrice = parseFloat(initialPrice.textContent);
-const priceSuffix = initialPrice.innerHTML.split("&nbsp;")[1];
+const initialPriceElement = document.querySelector(".woocommerce-Price-amount bdi");
+const basePrice = parseFloat(initialPriceElement.textContent.replace(",", "."));
+const priceSuffix = initialPriceElement.innerHTML.split("&nbsp;")[1];
 console.log("basePrice", basePrice);
 inputs.forEach(input => {
   input.addEventListener("change", event => {
@@ -15,13 +14,13 @@ inputs.forEach(input => {
   });
 });
 function updateTotalPrice() {
-  checkedInputs = document.querySelectorAll('input[name^="hkpu_product_upgrade_"]:checked');
+  const checkedInputs = document.querySelectorAll('input[name^="hkpu_product_upgrade_"]:checked');
   let totalPrice = 0;
   checkedInputs.forEach(input => {
-    totalPrice += parseFloat(input.dataset.price);
+    totalPrice += parseFloat(input.dataset.price.replace(",", "."));
   });
   const total = basePrice + totalPrice;
-  initialPrice.innerHTML = total.toFixed(2) + priceSuffix;
+  initialPriceElement.innerHTML = total.toFixed(2) + " " + priceSuffix;
 }
 /******/ })()
 ;

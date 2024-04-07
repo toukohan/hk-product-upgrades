@@ -23,8 +23,9 @@ export default function UpgradeList({
       <thead>
         <tr>
           <th>Title</th>
+          <th>Content</th>
           <th>Category</th>
-          <th>Price</th>
+          <th style={{ width: 50 }}>Price</th>
           <th style={{ width: 190 }}>Actions</th>
         </tr>
       </thead>

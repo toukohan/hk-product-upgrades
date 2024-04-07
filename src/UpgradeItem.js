@@ -3,8 +3,10 @@ import { useSelect, useDispatch } from "@wordpress/data";
 import { store as coreDataStore } from "@wordpress/core-data";
 import { decodeEntities } from "@wordpress/html-entities";
 import { useEffect, useState } from "@wordpress/element";
+import { store as noticesStore } from "@wordpress/notices";
 
 export default function UpgradeItem({ upgrade, upgradeCategories }) {
+  const { createSuccessNotice, createErrorNotice } = useDispatch(noticesStore);
   const { editedUpgrade, lastError, isSaving, hasEdits } = useSelect(
     (select) => {
       return {
@@ -65,12 +67,22 @@ export default function UpgradeItem({ upgrade, upgradeCategories }) {
     });
   };
 
-  const handlePriceChange = (price) => {
+  const handleContentChange = (content) => {
     editEntityRecord("postType", "product-upgrade", editedUpgrade.id, {
-      meta: {
-        hkpu_price: price,
-      },
+      content,
     });
+  };
+
+  const handlePriceChange = (price) => {
+    if (!isNaN(price) && price >= 0) {
+      editEntityRecord("postType", "product-upgrade", editedUpgrade.id, {
+        meta: {
+          hkpu_price: price,
+        },
+      });
+    } else {
+      createErrorNotice("Price must be a positive number");
+    }
   };
 
   const handleSave = async () => {
@@ -93,6 +105,13 @@ export default function UpgradeItem({ upgrade, upgradeCategories }) {
             id="upgrade-title"
             value={decodeEntities(editedUpgrade.title)}
             onChange={handleTitleChange}
+          />
+        </td>
+        <td>
+          <TextControl
+            id="upgrade-content"
+            value={decodeEntities(editedUpgrade.content)}
+            onChange={handleContentChange}
           />
         </td>
         <td>

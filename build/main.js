@@ -58,6 +58,7 @@ function CreateUpgradeForm({
 }) {
   const [upgrade, setUpgrade] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)({
     title: "",
+    content: "",
     price: "",
     category: ""
   });
@@ -76,6 +77,7 @@ function CreateUpgradeForm({
   const handleSave = async () => {
     const savedRecord = await saveEntityRecord("postType", "product-upgrade", {
       title: upgrade.title,
+      content: upgrade.content,
       meta: {
         hkpu_price: upgrade.price,
         hkpu_category: upgrade.category
@@ -113,6 +115,11 @@ function CreateUpgradeForm({
     }, ...categoryArray],
     onChange: value => handleChange(value, "category")
   }), !categoryArray && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Spinner, null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.TextControl, {
+    id: "content",
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Content", "hk-product-upgrades"),
+    value: upgrade.content,
+    onChange: value => handleChange(value, "content")
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.TextControl, {
     id: "price",
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Price", "hk-product-upgrades"),
     value: upgrade.price,
@@ -230,6 +237,45 @@ function CreateUpgradeForm({
 
 /***/ }),
 
+/***/ "./src/Notifications.js":
+/*!******************************!*\
+  !*** ./src/Notifications.js ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Notifications)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_notices__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/notices */ "@wordpress/notices");
+/* harmony import */ var _wordpress_notices__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_notices__WEBPACK_IMPORTED_MODULE_3__);
+
+
+
+
+function Notifications() {
+  const notices = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useSelect)(select => select(_wordpress_notices__WEBPACK_IMPORTED_MODULE_3__.store).getNotices(), []);
+  const {
+    removeNotice
+  } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useDispatch)(_wordpress_notices__WEBPACK_IMPORTED_MODULE_3__.store);
+  const snackbarNotices = notices.filter(({
+    type
+  }) => type === "snackbar");
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SnackbarList, {
+    className: "components-editor-notices__snackbar",
+    notices: snackbarNotices,
+    onRemove: removeNotice
+  });
+}
+
+/***/ }),
+
 /***/ "./src/UpgradeItem.js":
 /*!****************************!*\
   !*** ./src/UpgradeItem.js ***!
@@ -252,6 +298,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_html_entities__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_html_entities__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _wordpress_notices__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/notices */ "@wordpress/notices");
+/* harmony import */ var _wordpress_notices__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_notices__WEBPACK_IMPORTED_MODULE_6__);
+
 
 
 
@@ -262,6 +311,10 @@ function UpgradeItem({
   upgrade,
   upgradeCategories
 }) {
+  const {
+    createSuccessNotice,
+    createErrorNotice
+  } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useDispatch)(_wordpress_notices__WEBPACK_IMPORTED_MODULE_6__.store);
   const {
     editedUpgrade,
     lastError,
@@ -305,12 +358,21 @@ function UpgradeItem({
       }
     });
   };
-  const handlePriceChange = price => {
+  const handleContentChange = content => {
     editEntityRecord("postType", "product-upgrade", editedUpgrade.id, {
-      meta: {
-        hkpu_price: price
-      }
+      content
     });
+  };
+  const handlePriceChange = price => {
+    if (!isNaN(price) && price >= 0) {
+      editEntityRecord("postType", "product-upgrade", editedUpgrade.id, {
+        meta: {
+          hkpu_price: price
+        }
+      });
+    } else {
+      createErrorNotice("Price must be a positive number");
+    }
   };
   const handleSave = async () => {
     const savedRecord = await saveEditedEntityRecord("postType", "product-upgrade", editedUpgrade.id);
@@ -325,6 +387,10 @@ function UpgradeItem({
     id: "upgrade-title",
     value: (0,_wordpress_html_entities__WEBPACK_IMPORTED_MODULE_4__.decodeEntities)(editedUpgrade.title),
     onChange: handleTitleChange
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+    id: "upgrade-content",
+    value: (0,_wordpress_html_entities__WEBPACK_IMPORTED_MODULE_4__.decodeEntities)(editedUpgrade.content),
+    onChange: handleContentChange
   })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
     id: "upgrade-category",
     value: editedUpgrade.meta.hkpu_category,
@@ -403,7 +469,11 @@ function UpgradeList({
   }
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("table", {
     className: "wp-list-table widefat fixed striped table-view-list"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("thead", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("tr", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", null, "Title"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", null, "Category"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", null, "Price"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("thead", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("tr", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", null, "Title"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", null, "Content"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", null, "Category"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", {
+    style: {
+      width: 50
+    }
+  }, "Price"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", {
     style: {
       width: 190
     }
@@ -514,6 +584,16 @@ module.exports = window["wp"]["htmlEntities"];
 
 module.exports = window["wp"]["i18n"];
 
+/***/ }),
+
+/***/ "@wordpress/notices":
+/*!*********************************!*\
+  !*** external ["wp","notices"] ***!
+  \*********************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["notices"];
+
 /***/ })
 
 /******/ 	});
@@ -606,6 +686,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _UpgradeList__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./UpgradeList */ "./src/UpgradeList.js");
 /* harmony import */ var _CreateUpgradeButton__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./CreateUpgradeButton */ "./src/CreateUpgradeButton.js");
 /* harmony import */ var _CreateUpgradeCategoryButton__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./CreateUpgradeCategoryButton */ "./src/CreateUpgradeCategoryButton.js");
+/* harmony import */ var _Notifications__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Notifications */ "./src/Notifications.js");
+
 
 
 
@@ -619,20 +701,26 @@ __webpack_require__.r(__webpack_exports__);
 const MemoizedUpgradeList = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.memo)(_UpgradeList__WEBPACK_IMPORTED_MODULE_6__["default"]);
 function App() {
   const [searchTerm, setSearchTerm] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [filteredUpgrades, setFilteredUpgrades] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
   const {
     upgrades,
     hasResolved
   } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_4__.useSelect)(select => {
-    const query = {};
-    if (searchTerm) {
-      query.search = searchTerm;
-    }
-    const selectorArgs = ["postType", "product-upgrade", query];
+    const selectorArgs = ["postType", "product-upgrade"];
     return {
       upgrades: select(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_5__.store).getEntityRecords(...selectorArgs),
       hasResolved: select(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_5__.store).hasFinishedResolution("getEntityRecords", selectorArgs)
     };
-  }, [searchTerm]);
+  }, []);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    if (upgrades) {
+      const results = upgrades.filter(upgrade => {
+        const title = upgrade.title.rendered.toLowerCase();
+        return title.includes(searchTerm.toLowerCase());
+      });
+      setFilteredUpgrades(results);
+    }
+  }, [searchTerm, upgrades]);
   const {
     upgradeCategories,
     hasResolved: hasCategoriesResolved
@@ -644,7 +732,7 @@ function App() {
   });
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "product-upgrade-app"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Notifications__WEBPACK_IMPORTED_MODULE_9__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "upgrade-controls"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.SearchControl, {
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Search upgrades", "hk-product-upgrades"),
@@ -654,7 +742,7 @@ function App() {
     categories: upgradeCategories,
     hasCategoriesResolved: hasCategoriesResolved
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_CreateUpgradeCategoryButton__WEBPACK_IMPORTED_MODULE_8__["default"], null)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(MemoizedUpgradeList, {
-    upgrades: upgrades,
+    upgrades: filteredUpgrades,
     hasResolved: hasResolved,
     upgradeCategories: upgradeCategories,
     hasCategoriesResolved: hasCategoriesResolved

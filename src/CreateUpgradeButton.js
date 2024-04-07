@@ -47,6 +47,7 @@ function CreateUpgradeForm({
 }) {
   const [upgrade, setUpgrade] = useState({
     title: "",
+    content: "",
     price: "",
     category: "",
   });
@@ -67,6 +68,7 @@ function CreateUpgradeForm({
   const handleSave = async () => {
     const savedRecord = await saveEntityRecord("postType", "product-upgrade", {
       title: upgrade.title,
+      content: upgrade.content,
       meta: {
         hkpu_price: upgrade.price,
         hkpu_category: upgrade.category,
@@ -133,6 +135,12 @@ function CreateUpgradeForm({
         />
       )}
       {!categoryArray && <Spinner />}
+      <TextControl
+        id="content"
+        label={__("Content", "hk-product-upgrades")}
+        value={upgrade.content}
+        onChange={(value) => handleChange(value, "content")}
+      />
       <TextControl
         id="price"
         label={__("Price", "hk-product-upgrades")}
