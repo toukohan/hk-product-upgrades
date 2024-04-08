@@ -207,7 +207,7 @@ function hkpu_display_product_upgrades_in_cart( $name, $cart_item, $cart_item_ke
 
 add_action( 'woocommerce_before_calculate_totals', 'hkpu_recalculate_product_price', 10, 1 );
 function hkpu_recalculate_product_price( $cart ) {
-    if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+    if ( is_admin() ) {
         return;
     }
 
