@@ -230,8 +230,8 @@ if( defined( 'CFW_VERSION')) {
   add_filter('woocommerce_cart_item_product', 'hkpu_upgraded_item_price_in_cart', 10, 3);
 }
 
-function hkpu_upgraded_item_price_in_cart($cart_item_data, $cart_item, $cart_item_key) {
-  $product_id = $cart_item['product_id'];
+function hkpu_upgraded_item_price_in_cart($product, $cart_item, $cart_item_key) {
+  $product_id = $product->get_id();
   $categories = hkpu_get_product_upgrade_categories($product_id);
   $upgrades_total = 0;
   foreach ( $categories as $category ) {
@@ -242,9 +242,10 @@ function hkpu_upgraded_item_price_in_cart($cart_item_data, $cart_item, $cart_ite
       }
   }
   if ( $upgrades_total > 0 ) {
-      $cart_item_data['price'] .= ' + ' . $upgrades_total . '€';  
-    }
-  return $cart_item_data;
+      $new_price = $product->get_price() + $upgrades_total;
+      $product->set_price($new_price);
+  }
+  return $product;
 }
 
 // add_filter( 'woocommerce_cart_item_price', 'hkpu_display_upgrade_price_in_cart', 10, 3 );
