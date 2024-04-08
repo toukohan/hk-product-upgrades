@@ -242,7 +242,7 @@ function hkpu_upgraded_item_price_in_cart($cart_item_data, $cart_item, $cart_ite
       }
   }
   if ( $upgrades_total > 0 ) {
-      $cart_item_data['price'] .= ' + ' . $upgrades_total . '€';  
+      echo 'hello';
     }
   return $cart_item_data;
 }
