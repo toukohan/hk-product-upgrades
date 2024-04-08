@@ -232,7 +232,21 @@ if( defined( 'CFW_VERSION')) {
 
 function hkpu_cart_item_subtotal($item) {
   $product = $item->get_raw_item()['data'];
+  $id = $product->get_id();
   $price = $product->get_price();
+  $categories = hkpu_get_product_upgrade_categories($id);
+  $upgrades_total = 0;
+  foreach ( $categories as $category ) {
+      if ( isset( $item->get_raw_item()['hkpu_product_upgrade_' . $category] ) ) {
+          $upgrade_id = $item->get_raw_item()['hkpu_product_upgrade_' . $category];
+          $upgrade_price = get_post_meta( $upgrade_id, 'hkpu_price', true );
+          $upgrades_total += $upgrade_price;
+      }
+  }
+
+  if ( $upgrades_total > 0 ) {
+      $price += $upgrades_total;
+  }
   echo '<span class="cart-product-upgrades__base--price">' . $price . '€</span>';
 }
 
