@@ -231,7 +231,19 @@ if( defined( 'CFW_VERSION')) {
 }
 
 function hkpu_upgraded_item_price_in_cart($item) {
-  echo 'hello';
+  ob_start(); // Start output buffering
+    var_dump($item);
+    $output = ob_get_clean(); // Get the output into a variable
+
+    // Escape the output for use in JavaScript
+    $output = json_encode($output);
+
+    // Print a script tag to open a new window and write the output
+    echo "<script>
+        var debugWindow = window.open('', '_blank');
+        debugWindow.document.write($output);
+        debugWindow.document.close();
+    </script>";
  
 }
 
