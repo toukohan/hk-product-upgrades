@@ -202,28 +202,28 @@ function hkpu_display_product_upgrades_in_cart( $name, $cart_item, $cart_item_ke
     return $name;
 }
 
-add_action( 'woocommerce_before_calculate_totals', 'hkpu_recalculate_product_price', 10, 1 );
-function hkpu_recalculate_product_price( $cart ) {
-    if ( is_admin() && ! defined( 'DOING_AJAX' )) {
-        return;
-    }
+// add_action( 'woocommerce_before_calculate_totals', 'hkpu_recalculate_product_price', 10, 1 );
+// function hkpu_recalculate_product_price( $cart ) {
+//     if ( is_admin() && ! defined( 'DOING_AJAX' )) {
+//         return;
+//     }
 
-    foreach ( $cart->get_cart() as $cart_item_key => $cart_item ) {
-        $product_id = $cart_item['product_id'];
-        $categories = hkpu_get_product_upgrade_categories($product_id);
-        $new_price = $cart_item['data']->get_price();
-        foreach ( $categories as $category ) {
-            if ( isset( $cart_item['hkpu_product_upgrade_' . $category] ) ) {
-                $upgrade_id = $cart_item['hkpu_product_upgrade_' . $category];
-                $upgrade_price = get_post_meta( $upgrade_id, 'hkpu_price', true );
-                if ( $upgrade_price ) {
-                    $new_price += $upgrade_price;
-                }
-            }
-        }
-        $cart_item['data']->set_price( $new_price );
-    }
-}
+//     foreach ( $cart->get_cart() as $cart_item_key => $cart_item ) {
+//         $product_id = $cart_item['product_id'];
+//         $categories = hkpu_get_product_upgrade_categories($product_id);
+//         $new_price = $cart_item['data']->get_price();
+//         foreach ( $categories as $category ) {
+//             if ( isset( $cart_item['hkpu_product_upgrade_' . $category] ) ) {
+//                 $upgrade_id = $cart_item['hkpu_product_upgrade_' . $category];
+//                 $upgrade_price = get_post_meta( $upgrade_id, 'hkpu_price', true );
+//                 if ( $upgrade_price ) {
+//                     $new_price += $upgrade_price;
+//                 }
+//             }
+//         }
+//         $cart_item['data']->set_price( $new_price );
+//     }
+// }
 
 if( defined( 'CFW_VERSION')) {
   //add_action('cfw_before_cart_item_subtotal', 'hkpu_upgraded_item_price_in_cart' );
