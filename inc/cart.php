@@ -89,12 +89,22 @@ function hkpu_product_has_upgrades() {
   return ! empty( $upgrades );
 }
 
+function hkpu_filter_upgrades($upgrades) {
+  return array_filter($upgrades, function($upgrade_id) {
+    $post_status = get_post_status($upgrade_id);
+    return $post_status === 'publish';
+  });
+}
+
 function hkpu_get_product_upgrade_categories($product_id = null) {
   if ( is_null( $product_id ) ) {
     $product_id = get_the_ID();
   }
   $upgrades = get_post_meta( $product_id, 'hkpu_upgrades', false );
   $upgrades = empty( $upgrades ) ? array() : $upgrades[0];
+  // Filter upgrades to include only those with 'publish' status
+  $upgrades = hkpu_filter_upgrades($upgrades);
+
   $categories = array();
   foreach ( $upgrades as $upgrade_id ) {
     $category = get_post_meta( $upgrade_id, 'hkpu_category', true );
@@ -108,6 +118,10 @@ function hkpu_get_product_upgrade_categories($product_id = null) {
 function hkpu_get_product_upgrades_by_category( $category ) {
   $upgrades = get_post_meta( get_the_ID(), 'hkpu_upgrades', false );
   $upgrades = empty( $upgrades ) ? array() : $upgrades[0];
+
+  // Filter upgrades to include only those with 'publish' status
+  $upgrades = hkpu_filter_upgrades($upgrades);
+
   $category_upgrades = array();
   foreach ( $upgrades as $upgrade_id ) {
     $upgrade_category = get_post_meta( $upgrade_id, 'hkpu_category', true );
@@ -209,6 +223,25 @@ function hkpu_recalculate_product_price( $cart ) {
         }
         $cart_item['data']->set_price( $new_price );
     }
+}
+
+add_filter( 'woocommerce_cart_item_price', 'hkpu_display_upgrade_price_in_cart', 10, 3 );
+
+function hkpu_display_upgrade_price_in_cart( $price, $cart_item, $cart_item_key ) {
+    $product_id = $cart_item['product_id'];
+    $categories = hkpu_get_product_upgrade_categories($product_id);
+    $upgrades_total = 0;
+    foreach ( $categories as $category ) {
+        if ( isset( $cart_item['hkpu_product_upgrade_' . $category] ) ) {
+            $upgrade_id = $cart_item['hkpu_product_upgrade_' . $category];
+            $upgrade_price = get_post_meta( $upgrade_id, 'hkpu_price', true );
+            $upgrades_total += $upgrade_price;
+        }
+    }
+    if ( $upgrades_total > 0 ) {
+        $price .= ' + ' . $upgrades_total . '€';
+    }
+    return $price;
 }
 // add_filter( 'woocommerce_get_item_data', 'hkpu_display_upgrade_info_in_cart_item_meta', 10, 2 );
 // function hkpu_display_upgrade_info_in_cart_item_meta( $item_data, $cart_item ) {
