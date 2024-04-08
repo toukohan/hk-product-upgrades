@@ -197,6 +197,7 @@ function hkpu_display_product_upgrades_in_cart( $name, $cart_item, $cart_item_ke
         $name .= '<div class="cart-product-upgrades__wrapper">';
         $name .= '<div class="cart-product-upgrades__base">';
         $name .= '<span class="cart-product-upgrades__base--key">Perushinta: </span><span class="cart-product-upgrades__base--price">' . $base_price . '€</span>';
+        $name .= '<span>' . $upgrades_total . '€</span>';
         $name .= '</div>';
         $name .= $upgrade_html;
         $name .= '</div>';
