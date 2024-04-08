@@ -228,24 +228,24 @@ function hkpu_recalculate_product_price( $cart ) {
     }
 }
 
-add_filter( 'woocommerce_cart_item_price', 'hkpu_display_upgrade_price_in_cart', 10, 3 );
+// add_filter( 'woocommerce_cart_item_price', 'hkpu_display_upgrade_price_in_cart', 10, 3 );
 
-function hkpu_display_upgrade_price_in_cart( $price, $cart_item, $cart_item_key ) {
-    $product_id = $cart_item['product_id'];
-    $categories = hkpu_get_product_upgrade_categories($product_id);
-    $upgrades_total = 0;
-    foreach ( $categories as $category ) {
-        if ( isset( $cart_item['hkpu_product_upgrade_' . $category] ) ) {
-            $upgrade_id = $cart_item['hkpu_product_upgrade_' . $category];
-            $upgrade_price = get_post_meta( $upgrade_id, 'hkpu_price', true );
-            $upgrades_total += $upgrade_price;
-        }
-    }
-    if ( $upgrades_total > 0 ) {
-        $price .= ' + ' . $upgrades_total . '€';
-    }
-    return $price;
-}
+// function hkpu_display_upgrade_price_in_cart( $price, $cart_item, $cart_item_key ) {
+//     $product_id = $cart_item['product_id'];
+//     $categories = hkpu_get_product_upgrade_categories($product_id);
+//     $upgrades_total = 0;
+//     foreach ( $categories as $category ) {
+//         if ( isset( $cart_item['hkpu_product_upgrade_' . $category] ) ) {
+//             $upgrade_id = $cart_item['hkpu_product_upgrade_' . $category];
+//             $upgrade_price = get_post_meta( $upgrade_id, 'hkpu_price', true );
+//             $upgrades_total += $upgrade_price;
+//         }
+//     }
+//     if ( $upgrades_total > 0 ) {
+//         $price .= ' + ' . $upgrades_total . '€';
+//     }
+//     return $price;
+// }
 // add_filter( 'woocommerce_get_item_data', 'hkpu_display_upgrade_info_in_cart_item_meta', 10, 2 );
 // function hkpu_display_upgrade_info_in_cart_item_meta( $item_data, $cart_item ) {
 //     $categories = hkpu_get_product_upgrade_categories($cart_item['product_id']);
