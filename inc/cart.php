@@ -246,8 +246,8 @@ function hkpu_cart_item_subtotal($item) {
 
   if ( $upgrades_total > 0 ) {
       $price += $upgrades_total;
+      echo '<span class="cart-product-upgrades--subtotal">' . number_format($price, 2) . '</span>';
   }
-  echo '<span class="cart-product-upgrades__base--price">' . $price . '€</span>';
 }
 
 function hkpu_upgraded_item_price_in_cart($product, $cart_item, $cart_item_key) {

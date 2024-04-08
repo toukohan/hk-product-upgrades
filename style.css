@@ -18,3 +18,7 @@
   margin-right: 10px; /* Optional: Adds some space between the checkbox and the label */
 }
 
+
+.cfw-cart-item-subtotal:has(.cart-product-upgrades--subtotal) .woocommerce-Price-amount {
+  display: none;
+}
