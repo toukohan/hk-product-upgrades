@@ -225,6 +225,16 @@ function hkpu_recalculate_product_price( $cart ) {
     }
 }
 
+if( defined( 'CFW_VERSION')) {
+  add_action('cfw_before_cart_item_subtotal', 'hkpu_upgraded_item_price_in_cart' );
+}
+
+function hkpu_upgraded_item_price_in_cart($item) {
+  echo '<pre>';
+  print_r($item);
+  echo '</pre>';
+}
+
 // add_filter( 'woocommerce_cart_item_price', 'hkpu_display_upgrade_price_in_cart', 10, 3 );
 
 // function hkpu_display_upgrade_price_in_cart( $price, $cart_item, $cart_item_key ) {
