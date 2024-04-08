@@ -231,10 +231,9 @@ if( defined( 'CFW_VERSION')) {
 }
 
 function hkpu_cart_item_subtotal($item) {
-  echo '<style> pre { position: fixed; top: 0; right: 0; z-index: 9999; background: white; padding: 1rem; overflow: scroll; }</style>';
-  echo '<pre>';
-  print_r($item->get_raw_item()['data']);
-  echo '</pre>';
+  $product = $item->get_raw_item()['data'];
+  $price = $product->get_price();
+  echo '<span class="cart-product-upgrades__base--price">' . $price . '€</span>';
 }
 
 function hkpu_upgraded_item_price_in_cart($product, $cart_item, $cart_item_key) {
