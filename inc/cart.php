@@ -227,12 +227,26 @@ function hkpu_recalculate_product_price( $cart ) {
 
 if( defined( 'CFW_VERSION')) {
   add_action('cfw_before_cart_item_subtotal', 'hkpu_upgraded_item_price_in_cart' );
+  //add_filter('woocommerce_cart_item_product', 'hkpu_upgraded_item_price_in_cart' );
 }
 
 function hkpu_upgraded_item_price_in_cart($item) {
-  echo '<pre>';
-  print_r($item);
-  echo '</pre>';
+  $product_id = $item['product_id'];
+  $categories = hkpu_get_product_upgrade_categories($product_id);
+  $upgrades_total = 0;
+  foreach ( $categories as $category ) {
+      if ( isset( $item['hkpu_product_upgrade_' . $category] ) ) {
+          $upgrade_id = $item['hkpu_product_upgrade_' . $category];
+          $upgrade_price = get_post_meta( $upgrade_id, 'hkpu_price', true );
+          $upgrades_total += $upgrade_price;
+      }
+  }
+  if ( $upgrades_total > 0 ) {
+      echo '<span class="price-with-upgrades">';
+      echo $item['data']->get_price() + $upgrades_total;
+      echo '</span>';
+  }
+ 
 }
 
 // add_filter( 'woocommerce_cart_item_price', 'hkpu_display_upgrade_price_in_cart', 10, 3 );
