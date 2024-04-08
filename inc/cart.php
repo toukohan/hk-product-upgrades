@@ -204,7 +204,7 @@ function hkpu_display_product_upgrades_in_cart( $name, $cart_item, $cart_item_ke
 
 add_action( 'woocommerce_before_calculate_totals', 'hkpu_recalculate_product_price', 10, 1 );
 function hkpu_recalculate_product_price( $cart ) {
-    if ( is_admin() ) {
+    if ( is_admin() && ! defined( 'DOING_AJAX' )) {
         return;
     }
 
@@ -227,24 +227,24 @@ function hkpu_recalculate_product_price( $cart ) {
 
 if( defined( 'CFW_VERSION')) {
   //add_action('cfw_before_cart_item_subtotal', 'hkpu_upgraded_item_price_in_cart' );
-  //add_filter('woocommerce_cart_item_product', 'hkpu_upgraded_item_price_in_cart' );
+  add_filter('woocommerce_cart_item_product', 'hkpu_upgraded_item_price_in_cart' );
 }
 
-function hkpu_upgraded_item_price_in_cart($item) {
-  $product_id = $item['product_id'];
+function hkpu_upgraded_item_price_in_cart($cart_item_data, $cart_item, $cart_item_key) {
+  $product_id = $cart_item['product_id'];
   $categories = hkpu_get_product_upgrade_categories($product_id);
   $upgrades_total = 0;
   foreach ( $categories as $category ) {
-      if ( isset( $item['hkpu_product_upgrade_' . $category] ) ) {
-          $upgrade_id = $item['hkpu_product_upgrade_' . $category];
+      if ( isset( $cart_item['hkpu_product_upgrade_' . $category] ) ) {
+          $upgrade_id = $cart_item['hkpu_product_upgrade_' . $category];
           $upgrade_price = get_post_meta( $upgrade_id, 'hkpu_price', true );
           $upgrades_total += $upgrade_price;
       }
   }
   if ( $upgrades_total > 0 ) {
-      $item['data']->set_price( $item['data']->get_price() + $upgrades_total );
-  }
-  return $item;
+      $cart_item_data['price'] .= ' + ' . $upgrades_total . '€';  
+    }
+  return $cart_item_data;
 }
 
 // add_filter( 'woocommerce_cart_item_price', 'hkpu_display_upgrade_price_in_cart', 10, 3 );
