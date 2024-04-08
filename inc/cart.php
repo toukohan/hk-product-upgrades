@@ -189,7 +189,10 @@ function hkpu_display_product_upgrades_in_cart( $name, $cart_item, $cart_item_ke
         }
     } 
     if ( ! empty( $upgrade_html ) ) {
-        $base_price = $cart_item['data']->get_price() - $upgrades_total;
+        $base_price = $cart_item['data']->get_price();
+        if( ! function_exists( 'cfw_get_checkout_item_summary_table')) {
+          $base_price = $base_price - $upgrades_total;
+        }
         $name = '<div class="cart-product-upgrades"><span class="cart-product-upgrades__name">' . $name . '</span>';
         $name .= '<div class="cart-product-upgrades__wrapper">';
         $name .= '<div class="cart-product-upgrades__base">';
