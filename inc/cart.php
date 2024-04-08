@@ -231,16 +231,9 @@ if( defined( 'CFW_VERSION')) {
 }
 
 function hkpu_upgraded_item_price_in_cart($cart_item_data, $cart_item, $cart_item_key) {
-  $product_id = $cart_item['product_id'];
-  $categories = hkpu_get_product_upgrade_categories($product_id);
-  $upgrades_total = 0;
-  foreach ( $categories as $category ) {
-      if ( isset( $cart_item['hkpu_product_upgrade_' . $category] ) ) {
-          $upgrade_id = $cart_item['hkpu_product_upgrade_' . $category];
-          $upgrade_price = get_post_meta( $upgrade_id, 'hkpu_price', true );
-          $upgrades_total += $upgrade_price;
-      }
-  }
+ 
+  $upgrades_total = 1;
+ 
   if ( $upgrades_total > 0 ) {
       echo 'hello';
     }
