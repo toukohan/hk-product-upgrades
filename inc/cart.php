@@ -233,7 +233,7 @@ if( defined( 'CFW_VERSION')) {
 function hkpu_cart_item_subtotal($item) {
   echo '<style> pre { position: fixed; top: 0; right: 0; z-index: 9999; background: white; padding: 1rem; }</style>';
   echo '<pre>';
-  print_r($item);
+  print_r($item-get_raw_item());
   echo '</pre>';
 }
 
