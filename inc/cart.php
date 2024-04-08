@@ -227,7 +227,7 @@ function hkpu_recalculate_product_price( $cart ) {
 
 if( defined( 'CFW_VERSION')) {
   //add_action('cfw_before_cart_item_subtotal', 'hkpu_upgraded_item_price_in_cart' );
-  add_filter('woocommerce_cart_item_product', 'hkpu_upgraded_item_price_in_cart' );
+  //add_filter('woocommerce_cart_item_product', 'hkpu_upgraded_item_price_in_cart' );
 }
 
 function hkpu_upgraded_item_price_in_cart($item) {
