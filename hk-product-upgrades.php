@@ -111,24 +111,25 @@ function hkpu_enqueue_frontend_scripts() {
     if( is_admin(  ) ) {
         return;
     }
+    $asset_file = include plugin_dir_path( __FILE__ ) . 'build/frontend.asset.php';
 
     wp_register_script(
         'hkpu-frontend',
         plugins_url( 'build/frontend.js', __FILE__ ),
         array(), // dependencies
-        '1.0.0', // version number
+        $asset_file['version'], // version number
         true // load the script in the footer
     );
 
     wp_enqueue_script( 'hkpu-frontend' );
 
     wp_register_style(
-        'hk-product-upgrades',
+        'hkpu-frontend-style',
         plugins_url( 'style.css', __FILE__ ),
         array(),
         $asset_file['version']
     );
-    wp_enqueue_style( 'hk-product-upgrades' );
+    wp_enqueue_style( 'hkpu-frontend-style' );
 }
 
 
