@@ -9,7 +9,6 @@ if (inputs.length && initialPriceElement) {
   const taxFreePriceElement = document.querySelector(".woocommerce-price-suffix .woocommerce-Price-amount bdi");
   const basePrice = parseFloat(initialPriceElement.textContent.replace(",", "."));
   const priceSuffix = initialPriceElement.innerHTML.split("&nbsp;")[1];
-  const taxFreePrice = parseFloat(taxFreePriceElement.textContent.replace(",", "."));
   inputs.forEach(input => {
     input.addEventListener("change", event => {
       updateTotalPrice();
@@ -24,6 +23,7 @@ if (inputs.length && initialPriceElement) {
     const total = basePrice + totalPrice;
     initialPriceElement.innerHTML = total.toFixed(2) + " " + priceSuffix;
     if (!taxFreePriceElement) return;
+    const taxFreePrice = parseFloat(taxFreePriceElement.textContent.replace(",", "."));
     const taxFreeTotal = taxFreePrice + totalPrice;
     taxFreePriceElement.innerHTML = taxFreeTotal.toFixed(2) + " " + priceSuffix;
   }

@@ -54,7 +54,7 @@ function hkpu_add_visible_cart_inputs() {
       }
     }
     ?>
-    <div class="product__upgrade--category product__upgrade--<?php echo esc_attr(strtolower($term_name)); ?>">
+    <div class="product__upgrade--category product__info-box product__upgrade--<?php echo esc_attr(strtolower($term_name)); ?>">
       <h3 class="product__upgrade--title"><?php echo esc_html($term_name); ?></h3>
       <label class="product__upgrade--label" for="product__upgrade--default-<?php echo esc_attr(strtolower($term_name)); ?>">
         <input id="product__upgrade--default-<?php echo esc_attr(strtolower($term_name)); ?>" type="radio" name="hkpu_product_upgrade_<?php echo esc_attr($category); ?>" value="default" data-price=0 checked>
@@ -147,12 +147,9 @@ function hkpu_add_to_cart($cart_item_key, $product_id, $quantity, $variation_id,
 
 add_filter( 'woocommerce_add_cart_item_data', 'hkpu_add_cart_item_data', 10, 3 );
 function hkpu_add_cart_item_data( $cart_item_data, $product_id, $variation_id ) {
-
-  error_log( 'Before add_to_cart: ' . print_r( $_POST, true ) );
-  error_log( 'Before add_to_cart: ' . print_r( $cart_item_data, true ) );
+ 
     $categories = hkpu_get_product_upgrade_categories($product_id);
 
-  error_log( 'Categories: ' . print_r( $categories, true ) );
     foreach ( $categories as $category ) {
         $upgrade_id = isset( $_POST['hkpu_product_upgrade_' . $category] ) ? absint( $_POST['hkpu_product_upgrade_' . $category] ) : 0;
         if ( $upgrade_id ) {
@@ -160,7 +157,6 @@ function hkpu_add_cart_item_data( $cart_item_data, $product_id, $variation_id ) 
         }
     }
 
-    error_log( 'After add_to_cart: ' . print_r( $cart_item_data, true ) );
     return $cart_item_data;
 }
 
