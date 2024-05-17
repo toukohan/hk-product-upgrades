@@ -9,6 +9,12 @@ if (inputs.length && initialPriceElement) {
   const taxFreePriceElement = document.querySelector(
     ".woocommerce-price-suffix .woocommerce-Price-amount bdi"
   );
+  let taxFreePrice;
+  if (taxFreePriceElement) {
+    taxFreePrice = parseFloat(
+      taxFreePriceElement.textContent.replace(",", ".")
+    );
+  }
 
   const basePrice = parseFloat(
     initialPriceElement.textContent.replace(",", ".")
@@ -34,9 +40,7 @@ if (inputs.length && initialPriceElement) {
     initialPriceElement.innerHTML = total.toFixed(2) + " " + priceSuffix;
 
     if (!taxFreePriceElement) return;
-    const taxFreePrice = parseFloat(
-      taxFreePriceElement.textContent.replace(",", ".")
-    );
+
     const taxFreeTotal = taxFreePrice + totalPrice;
     taxFreePriceElement.innerHTML = taxFreeTotal.toFixed(2) + " " + priceSuffix;
   }
